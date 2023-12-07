@@ -1,31 +1,57 @@
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import ListOrderScreen from "../screens/ListOrderScreen";
 import CreateOrderScreen from "../screens/CreateOrderScreen";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { OrderStackParamList } from "../../types";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<OrderStackParamList>();
 
 function OrderStack() {
     return (
-        <Stack.Navigator
-            screenOptions={{
-                headerShown: false,
-            }}
-        >
-            <Stack.Screen name="OrderList" component={ListOrderScreen} />
-            <Stack.Screen name="OrderDetail" component={CreateOrderScreen} />
+        <Stack.Navigator>
+            <Stack.Screen
+                name="OrderList"
+                component={ListOrderScreen}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="OrderDetail"
+                component={CreateOrderScreen}
+                options={({ route }) => ({
+                    title: route.params.order
+                        ? `Order-${route.params.order?.id}`
+                        : "Create Order",
+                })}
+            />
         </Stack.Navigator>
     );
 }
 
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 function AppNavigation() {
     return (
-        <Tab.Navigator barStyle={{ backgroundColor: "white" }}>
-            <Tab.Screen name="Order" component={OrderStack} />
+        <Tab.Navigator
+            screenOptions={{
+                tabBarIconStyle: {
+                    display: "none",
+                },
+                tabBarLabelStyle: {
+                    fontSize: 16,
+                },
+            }}
+        >
+            <Tab.Screen
+                name="Order"
+                component={OrderStack}
+                options={{
+                    headerShown: false,
+                }}
+            />
             <Tab.Screen name="Add new" component={CreateOrderScreen} />
         </Tab.Navigator>
     );

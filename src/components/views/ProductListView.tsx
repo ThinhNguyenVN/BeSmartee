@@ -1,9 +1,11 @@
+// @ts-ignore
 import { maxBy } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Divider, TextInput } from "react-native-paper";
 import { IProduct } from "../../types";
 import styles from "../styles";
+import { useDidUpdateEffect } from "../../hooks";
 
 type props = {
     productList?: IProduct[];
@@ -16,7 +18,7 @@ export interface IInputProduct extends IProduct {
 
 export default function ProductListView({ productList, onChange }: props) {
     const [products, setProducts] = useState<IInputProduct[]>(
-        productList ?? []
+        productList || []
     );
 
     const onAddProduct = () => {
@@ -49,7 +51,7 @@ export default function ProductListView({ productList, onChange }: props) {
         }
     };
 
-    useEffect(() => {
+    useDidUpdateEffect(() => {
         onChange(products);
     }, [products]);
 

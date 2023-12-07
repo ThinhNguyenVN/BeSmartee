@@ -1,8 +1,8 @@
 import { TouchableOpacity, View } from "react-native";
 import React, { useMemo } from "react";
-import { IOrder } from "../../types";
+import { IOrder, OrderNavigationProp } from "../../types";
 import styles from "../styles";
-import { Text } from "react-native-paper";
+import { Text, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 type props = {
@@ -10,11 +10,10 @@ type props = {
 };
 
 export default function OrderItemView({ order }: props) {
-    const navigation = useNavigation();
+    const navigation = useNavigation<OrderNavigationProp>();
     const Products = useMemo(() => {
         return order.products.map((item) => (
             <Text key={`product-item-${order.id}-${item.id}`}>
-                {" "}
                 {`${item.name} - ${item.quantity}`}
             </Text>
         ));
@@ -27,14 +26,17 @@ export default function OrderItemView({ order }: props) {
     return (
         <TouchableOpacity style={styles.listOrderItem} onPress={onPress}>
             <Text variant="titleLarge">{`Order-${order.id}`}</Text>
-            <View style={{ paddingHorizontal: 16 }}>{Products}</View>
-
-            <View style={styles.orderItemNoteView}>
-                <Text variant="labelLarge" style={styles.noteTitle}>
-                    Note goes here
-                </Text>
-                <Text>{order.note}</Text>
-            </View>
+            <View style={{ padding: 16 }}>{Products}</View>
+            <TextInput
+                mode="outlined"
+                style={styles.noteInput}
+                label="Note goes here"
+                numberOfLines={5}
+                multiline
+                value={order.note}
+                editable={false}
+                disabled
+            />
         </TouchableOpacity>
     );
 }

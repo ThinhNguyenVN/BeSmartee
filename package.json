@@ -10,10 +10,10 @@
     "test": "jest"
   },
   "dependencies": {
-    "@react-navigation/material-bottom-tabs": "^6.2.19",
+    "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
-    "lodash": "^4.17.21",
+    "lodash": "4.17.21",
     "react": "18.2.0",
     "react-native": "0.73.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
@@ -23,6 +23,7 @@
     "react-native-vector-icons": "^10.0.2"
   },
   "devDependencies": {
+    "@types/lodash": "4.17.21",
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",

@@ -1,3 +1,5 @@
+import { NavigationProp } from "@react-navigation/native";
+
 export interface IProduct {
     id: number;
     name: string;
@@ -5,7 +7,7 @@ export interface IProduct {
 }
 export interface IOrder {
     id: number;
-    note: string;
+    note?: string;
     products: IProduct[];
 }
 
@@ -29,3 +31,12 @@ export const OrderListMockData = [
     OrderItem,
     OrderItem,
 ];
+
+export type OrderStackParamList = {
+    OrderList: undefined;
+    OrderDetail: {
+        order: IOrder;
+    };
+};
+
+export type OrderNavigationProp = NavigationProp<OrderStackParamList>;

@@ -1,75 +1,74 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import { ActivityIndicator, FlatList, Text } from "react-native";
-import { useRef } from "react";
+import React, {
+    useCallback,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
+import { ActivityIndicator, FlatList } from "react-native";
 import styles from "../styles";
 
-import { IOrder, OrderListMockData } from "../../types";
+import { OrderContext } from "../../contexts";
+import { IOrder } from "../../types";
 import OrderItemView from "../views/OrderItemView";
+import { MAX_ORDER_PAGE, getOrdersAsync } from "../../api";
 
 export default function ListOrderScreen() {
-    const [data, setData] = useState<IOrder[]>(OrderListMockData);
+    const [data, setData] = useState<IOrder[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const nextPageIdentifierRef = useRef();
-    const [isFirstPageReceived, setIsFirstPageReceived] = useState(false);
+    const nextPageIdentifierRef = useRef<number>(0);
+    const { orders } = useContext(OrderContext);
+    const [isMaxPage, setIsMaxPage] = useState(false);
 
     const fetchData = () => {
         setIsLoading(true);
-        setData(OrderListMockData);
-        setIsLoading(false);
-        // getDataFromApi(nextPageIdentifierRef.current).then((response) => {
-        //     const { data: newData, nextPageIdentifier } =
-        //         parseResponse(response);
-        //     setData([...data, newData]);
-        //     nextPageIdentifierRef.current = nextPageIdentifier;
-        //     setIsLoading(false);
-        //     !isFirstPageReceived && setIsFirstPageReceived(true);
-        // });
+        getOrdersAsync(nextPageIdentifierRef.current ?? 0, orders)
+            .then((response) => {
+                setData([...data, ...response.data]);
+                nextPageIdentifierRef.current =
+                    (nextPageIdentifierRef.current ?? 0) + 1;
+
+                if (
+                    nextPageIdentifierRef.current * MAX_ORDER_PAGE >=
+                    response.maxLength
+                ) {
+                    setIsMaxPage(true);
+                }
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     };
 
     const fetchNextPage = () => {
-        if (nextPageIdentifierRef.current == null) {
-            // End of data.
+        if (isMaxPage || isLoading) {
             return;
         }
         fetchData();
-    };
-
-    const getDataFromApi = () => {
-        // get the data from api
-        return Promise.resolve({ data: [], nextPageIdentifier: "page-1" });
-    };
-    const parseResponse = (response) => {
-        let _data = response.data;
-        let nextPageIdentifier = response.nextPageIdentifier;
-        // parse response and return list and nextPage identifier.
-        return {
-            _data,
-            nextPageIdentifier,
-        };
     };
 
     useEffect(() => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        setData((prev) => orders.slice(0, prev.length - 1));
+    }, [orders]);
+
     const renderItem = ({ item }: { item: IOrder }) => {
-        console.log("renderItem == ", item);
         return <OrderItemView order={item} />;
     };
 
     const ListEndLoader = () => {
-        if (!isFirstPageReceived && isLoading) {
-            // Show loader at the end of list when fetching next page data.
-            return <ActivityIndicator size={"large"} />;
+        if (isLoading) {
+            return (
+                <ActivityIndicator
+                    size={"small"}
+                    style={{ paddingVertical: 16 }}
+                />
+            );
         }
     };
-
-    if (!isFirstPageReceived && isLoading) {
-        // Show loader when fetching first page data.
-        return <ActivityIndicator size={"small"} />;
-    }
 
     return (
         <FlatList
@@ -79,7 +78,7 @@ export default function ListOrderScreen() {
             onEndReached={fetchNextPage}
             onEndReachedThreshold={0.8}
             keyExtractor={(_, index) => `order-item-${index}`}
-            ListFooterComponent={ListEndLoader} // Loader when loading next page.
+            ListFooterComponent={ListEndLoader}
         />
     );
 }

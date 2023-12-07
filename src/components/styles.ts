@@ -23,13 +23,7 @@ const styles = StyleSheet.create({
         top: -18,
         left: 16,
     },
-    orderItemNoteView: {
-        marginTop: 24,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: "black",
-        padding: 16,
-        borderRadius: 8,
-    },
+
     detailContainer: {
         flex: 1,
         backgroundColor: "white",
