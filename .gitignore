@@ -1,0 +1,19 @@
+
+## React Native
+node_modules
+vendor
+
+## Android
+.gradle/
+.idea/
+*.iml
+local.properties
+build/
+
+##iOS
+*.ipa
+*.dSYM.zip
+ios/Pods/*
+studio.sh
+
+.DS_Store
