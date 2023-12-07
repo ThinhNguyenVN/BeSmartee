@@ -1,7 +1,7 @@
 // @ts-ignore
 import { maxBy } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { LayoutAnimation, Text, TouchableOpacity, View } from "react-native";
 import { Divider, TextInput } from "react-native-paper";
 import { IProduct } from "../../types";
 import styles from "../styles";
@@ -36,6 +36,7 @@ export default function ProductListView({ productList, onChange }: props) {
 
     const onremoveProduct = (id: number) => () => {
         const productsTmp = [...products].filter((item) => item.id !== id);
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setProducts(productsTmp);
     };
 
