@@ -1,22 +1,22 @@
-import React from 'react';
-import {StyleSheet, Text, SafeAreaView} from 'react-native';
+// In App.js in a new project
 
-const App = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>Page content</Text>
-    </SafeAreaView>
-  );
-};
+import * as React from "react";
+import { View, Text, SafeAreaView } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import AppNavigation from "./navigators";
+import styles from "./styles";
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  text: {
-    fontSize: 25,
-    fontWeight: '500',
-  },
-});
+const Stack = createNativeStackNavigator();
+
+function App() {
+    return (
+        <SafeAreaView style={styles.container}>
+            <NavigationContainer>
+                <AppNavigation />
+            </NavigationContainer>
+        </SafeAreaView>
+    );
+}
 
 export default App;
